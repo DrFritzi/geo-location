@@ -35,7 +35,7 @@ Provides the current location using the [Geolocation API](https://developer.mozi
 @homepage http://ebidel.github.io/geo-location
 -->
 <!-- TODO: decide if we need to cache results across instances. -->
-<polymer-element name="geo-location" attributes="watchPos highAccuracy position">
+<polymer-element name="geo-location" attributes="watchPos highAccuracy position accuracy">
   <template>
     <style>
       :host {
@@ -63,6 +63,7 @@ Provides the current location using the [Geolocation API](https://developer.mozi
        *   @param {Position} position The raw position object returned by the Geolocation API.
        *   @param {Number} detail.latitude Latitude of the current position.
        *   @param {Number} detail.longitude Longitude of the current position.
+       *   @param {Number} detail.accuracy Accuracy of the current position.
        */
 
       Polymer({
@@ -162,10 +163,12 @@ Provides the current location using the [Geolocation API](https://developer.mozi
           this.position = pos;
           this.latitude = pos.coords.latitude;
           this.longitude = pos.coords.longitude;
+		  this.accuracy = pos.coords.accuracy;
           this.fire('geo-response', {
             latitude: this.latitude,
             longitude: this.longitude,
-            position: pos
+            position: pos,
+			accuracy: this.accuracy
           });
         },
         /**
