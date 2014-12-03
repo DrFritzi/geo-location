@@ -136,21 +136,40 @@ Provides the current location using the [Geolocation API](https://developer.mozi
           }
         },
         watchPosChanged: function() {
-          if (this.currentNavigatorObject) {
-            navigator.geolocation.clearWatch(this.currentNavigatorObject);
-            this.currentNavigatorObject = null;
+           this.updateWatcher();
+        },
+        highAccuracyChanged: function()
+        {
+            this.updateWatcher();
+        },
+        
+        clearWatcher: function()
+        {
+            if (this.currentNavigatorObject) {
+                navigator.geolocation.clearWatch(this.currentNavigatorObject);
+                this.currentNavigatorObject = null;
           }
-
-          if (this.watchPos) {
+        },
+        setWatcher: function()
+        {
             var options = {
-              enableHighAccuracy: this.highAccuracy,
-              timeout: this.timeout,
-              maximumAge: this.maximumAge
+                  enableHighAccuracy: this.highAccuracy,
+                  timeout: this.timeout,
+                  maximumAge: this.maximumAge
             };
             this.currentNavigatorObject = navigator.geolocation.watchPosition(
               this.onPosition.bind(this), this.onError.bind(this), options);
-          }
         },
+        updateWatcher: function()
+        {
+             this.clearWatcher();
+            
+            if (this.watchPos) {
+                this.setWatcher();
+            }        
+        },
+          
+        
         /**
          * Success callback when the Geolocation API returns results.
          *
@@ -167,6 +186,7 @@ Provides the current location using the [Geolocation API](https://developer.mozi
             longitude: this.longitude,
             position: pos,
 			accuracy: this.accuracy
+              
           });
         },
         /**
