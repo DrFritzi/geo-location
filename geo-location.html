@@ -1,7 +1,5 @@
 <!-- Copyright Eric Bidelman <ebidel@gmail.com> -->
 
-<link rel="import" href="../polymer/polymer.html">
-
 <!--
 Provides the current location using the [Geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/Using_geolocation).
 
@@ -44,8 +42,7 @@ Provides the current location using the [Geolocation API](https://developer.mozi
     </style>
   </template>
   <script>
-    (function() {
-      var id_ = null;
+      
 
       /**
        * Fired when the Geolocation API returns an error.
@@ -66,8 +63,9 @@ Provides the current location using the [Geolocation API](https://developer.mozi
        *   @param {Number} detail.accuracy Accuracy of the current position.
        */
 
-      Polymer({
-
+      Polymer('geo-location',
+      {
+        currentNavigatorObject : null,
         publish: {
           /**
            * The latitude of the current position.
@@ -138,9 +136,9 @@ Provides the current location using the [Geolocation API](https://developer.mozi
           }
         },
         watchPosChanged: function() {
-          if (id_) {
-            navigator.geolocation.clearWatch(id_);
-            id_ = null;
+          if (this.currentNavigatorObject) {
+            navigator.geolocation.clearWatch(this.currentNavigatorObject);
+            this.currentNavigatorObject = null;
           }
 
           if (this.watchPos) {
@@ -149,7 +147,7 @@ Provides the current location using the [Geolocation API](https://developer.mozi
               timeout: this.timeout,
               maximumAge: this.maximumAge
             };
-            id_ = navigator.geolocation.watchPosition(
+            this.currentNavigatorObject = navigator.geolocation.watchPosition(
               this.onPosition.bind(this), this.onError.bind(this), options);
           }
         },
@@ -181,6 +179,5 @@ Provides the current location using the [Geolocation API](https://developer.mozi
           this.fire('geo-error', {error: err.code + ': ' + err.message});
         }
       });
-    })();
   </script>
 </polymer-element>
