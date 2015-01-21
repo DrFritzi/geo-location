@@ -134,6 +134,7 @@ Provides the current location using the [Geolocation API](https://developer.mozi
             navigator.geolocation.getCurrentPosition(
               this.onPosition.bind(this), this.onError.bind(this), options);
           }
+          this.updateWatcher();
         },
         watchPosChanged: function() {
            this.updateWatcher();
@@ -149,6 +150,10 @@ Provides the current location using the [Geolocation API](https://developer.mozi
                 navigator.geolocation.clearWatch(this.currentNavigatorObject);
                 this.currentNavigatorObject = null;
           }
+        },
+
+        detached: function () {
+            this.clearWatcher();
         },
         setWatcher: function()
         {
